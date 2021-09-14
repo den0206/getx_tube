@@ -21,6 +21,12 @@ class YTService {
     print(streamInfo);
   }
 
+  Future<CommentsList?> getComments(Video video) async {
+    final comment = await yt.videos.commentsClient.getComments(video);
+
+    return comment;
+  }
+
   Future<Channel> getChannel(ChannelId id) async {
     final channel = await yt.channels.get(id);
     return channel;

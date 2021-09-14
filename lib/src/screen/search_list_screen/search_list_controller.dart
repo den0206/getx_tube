@@ -14,10 +14,10 @@ class SearchListBinding extends Bindings {
 
 class SerarchListController extends GetxController {
   final String q = Get.arguments;
+  RxList<Video> videos = RxList<Video>();
 
   final ytSearvice = YTService();
-  late SearchList searchList;
-  RxList<Video> videos = RxList<Video>();
+  late SearchList currentPage;
 
   var _endResults = false;
   var loading = false;
@@ -26,7 +26,7 @@ class SerarchListController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    await setVideos();
+    await loadVieos();
   }
 
   @override
@@ -35,17 +35,7 @@ class SerarchListController extends GetxController {
     super.onClose();
   }
 
-  Future<void> setVideos() async {
-    searchList = await ytSearvice.getSerchList(q);
-
-    if (searchList.isEmpty) {
-      _endResults = true;
-    }
-
-    videos.addAll(searchList.toList());
-  }
-
-  Future<void> fetchMore() async {
+  Future<void> loadVieos() async {
     if (_endResults) {
       return;
     }
@@ -53,14 +43,22 @@ class SerarchListController extends GetxController {
     loading = true;
 
     try {
-      final result = await searchList.nextPage();
+      SearchList? result;
 
-      if (result == null) {
+      if (videos.isEmpty) {
+        result = await ytSearvice.getSerchList(q);
+      } else {
+        result = await currentPage.nextPage();
+      }
+
+      if (result == null || result.isEmpty) {
         _endResults = true;
         return;
       }
 
-      videos.addAll(result.toList());
+      currentPage = result;
+
+      videos.addAll(currentPage.toList());
     } catch (e) {
       print(e.toString());
     } finally {
@@ -68,7 +66,9 @@ class SerarchListController extends GetxController {
     }
   }
 
-  void pushVideoDetailScreen(Video video) {
-    Get.toNamed(VideoDetailScreen.routeName, arguments: video);
+  Future<void> pushVideoDetailScreen(Video video) async {
+    final videoIncleWatch = await ytSearvice.yt.videos.get(video.id);
+
+    Get.toNamed(VideoDetailScreen.routeName, arguments: videoIncleWatch);
   }
 }

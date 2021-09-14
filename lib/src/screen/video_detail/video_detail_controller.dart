@@ -17,14 +17,16 @@ class VideoDetailController extends GetxController {
 
   late YoutubePlayerController ytController;
   final YTService ytService = YTService();
+  final RxList<Comment> comments = RxList<Comment>();
 
   Channel? videoChannel;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-
     loadVideo();
+    await loadChannel();
+    await loadCommens();
   }
 
   @override
@@ -49,7 +51,23 @@ class VideoDetailController extends GetxController {
     );
   }
 
-  void loadChannel() async {
+  Future<void> loadCommens() async {
+    try {
+      final commentsList = await ytService.getComments(video);
+      if (commentsList == null || commentsList.isEmpty) {
+        return;
+      }
+
+      comments.addAll(commentsList.toList());
+
+      update();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> loadChannel() async {
     videoChannel = await ytService.getChannel(video.channelId);
+    update();
   }
 }

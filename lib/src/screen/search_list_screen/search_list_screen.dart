@@ -26,7 +26,7 @@ class SearchListScreen extends GetView<SerarchListController> {
             final video = controller.videos[index];
 
             if (index == controller.videos.length - 1) {
-              controller.fetchMore();
+              controller.loadVieos();
               if (controller.loading) return LoadingCellWidget();
             }
             return VideoCell(video: video);
@@ -50,8 +50,8 @@ class VideoCell extends GetView<SerarchListController> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
-        onTap: () {
-          controller.pushVideoDetailScreen(video);
+        onTap: () async {
+          await controller.pushVideoDetailScreen(video);
         },
         child: Container(
           height: 15.h,

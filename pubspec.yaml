@@ -16,12 +16,15 @@ dependencies:
     sdk: flutter
   get: ^4.3.8
   sizer: ^2.0.13
-  youtube_explode_dart: ^1.10.6
+  timeago: ^3.1.0
+  youtube_explode_dart: ^1.10.7-dev.1
   youtube_player_flutter: ^8.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
 
 
 flutter:
