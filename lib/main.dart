@@ -7,6 +7,7 @@ import 'package:getx_tube/src/screen/search_list_screen/search_list_screen.dart'
 import 'package:getx_tube/src/screen/search_q/search_q_controller.dart';
 import 'package:getx_tube/src/screen/search_q/search_q_screen.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
+import 'package:getx_tube/src/service/database_service.dart';
 import 'package:sizer/sizer.dart';
 
 void main() async {
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
 class InitialBinding extends Bindings {
   @override
   void dependencies() {
+    Get.put(SharedPrefService());
     Get.put(SearchQController());
   }
 }

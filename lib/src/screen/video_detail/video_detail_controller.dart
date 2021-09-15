@@ -17,9 +17,12 @@ class VideoDetailController extends GetxController {
 
   late YoutubePlayerController ytController;
   final YTService ytService = YTService();
-  final RxList<Comment> comments = RxList<Comment>();
+  final List<Comment> comments = [];
 
+  CommentsList? currentPage;
   Channel? videoChannel;
+  var _endResults = false;
+  var loading = false;
 
   @override
   void onInit() async {
@@ -52,17 +55,37 @@ class VideoDetailController extends GetxController {
   }
 
   Future<void> loadCommens() async {
+    if (_endResults) {
+      return;
+    }
+
+    // loading = true;
+
+    // update();
     try {
-      final commentsList = await ytService.getComments(video);
-      if (commentsList == null || commentsList.isEmpty) {
-        return;
+      CommentsList? result;
+
+      if (comments.isEmpty) {
+        result = await ytService.getComments(video);
+      } else {
+        print("more");
+        result = await currentPage!.nextPage();
       }
 
-      comments.addAll(commentsList.toList());
-
+      if (result == null) {
+        _endResults = true;
+      } else {
+        currentPage = result;
+        comments.addAll(result.toList());
+      }
       update();
+
+      print(comments.length);
     } catch (e) {
+      _endResults = true;
       print(e.toString());
+    } finally {
+      loading = false;
     }
   }
 

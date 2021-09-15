@@ -16,24 +16,38 @@ class SearchQScreen extends GetView<SearchQController> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(8),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "キーワードを入力",
-                    labelStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.white,
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    Icon(Icons.search),
+                    SizedBox(
+                      width: 15,
                     ),
-                    focusColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                    Flexible(
+                      child: TextField(
+                        controller: controller.tX,
+                        decoration: InputDecoration(
+                          labelText: "キーワードを入力",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        ),
+                        onChanged: controller.getSuggest,
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                  onChanged: controller.getSuggest,
+                    IconButton(
+                      icon: Icon(Icons.close_rounded),
+                      onPressed: () {
+                        controller.tX.clear();
+                        controller.suggests.clear();
+                      },
+                    )
+                  ],
                 ),
               ),
               Divider(),
@@ -43,13 +57,20 @@ class SearchQScreen extends GetView<SearchQController> {
                     separatorBuilder: (context, index) => Divider(
                       color: Colors.white,
                     ),
-                    itemCount: controller.suggests.length,
+                    itemCount: controller.suggests.isEmpty
+                        ? controller.predicts.length
+                        : controller.suggests.length,
                     itemBuilder: (context, index) {
-                      final String suggest = controller.suggests[index];
+                      String keyword;
+                      if (controller.suggests.isEmpty) {
+                        keyword = controller.predicts[index];
+                      } else {
+                        keyword = controller.suggests[index];
+                      }
 
                       return ListTile(
-                        title: Text(suggest),
-                        onTap: () => controller.pushListScreen(suggest),
+                        title: Text(keyword),
+                        onTap: () => controller.pushListScreen(keyword),
                       );
                     },
                   ),

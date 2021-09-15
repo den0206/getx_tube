@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_controller.dart';
+import 'package:getx_tube/src/screen/widget/loading_widget.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -40,10 +41,16 @@ class VideoDetailScreen extends GetView<VideoDetailController> {
                       Expanded(
                         child: ListView.separated(
                           separatorBuilder: (context, index) => Divider(),
-                          shrinkWrap: true,
+                          // shrinkWrap: true,
                           itemCount: controller.comments.length,
                           itemBuilder: (context, index) {
                             final comment = controller.comments[index];
+
+                            if (index == controller.comments.length - 1) {
+                              controller.loadCommens();
+                              if (controller.loading)
+                                return LoadingCellWidget();
+                            }
                             return ListTile(
                               title: Text(comment.text),
                             );

@@ -1,26 +1,34 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:getx_tube/src/screen/search_list_screen/search_list_screen.dart';
+import 'package:getx_tube/src/service/database_service.dart';
 import 'package:getx_tube/src/service/yt_service.dart';
 import 'package:get/get.dart';
 
 class SearchQController extends GetxController {
   final RxList<String> suggests = RxList<String>();
+  final RxList<String> predicts = RxList<String>();
 
-  String _searchText = "";
+  final TextEditingController tX = TextEditingController();
+
+  String searchText = "";
   Timer? _searchTimer;
 
   final ytSearvice = YTService();
+
+  final SharedPrefService database = SharedPrefService.to;
 
   bool get noSuggest {
     return suggests.isEmpty;
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    await loadPredicts();
   }
 
   @override
@@ -31,11 +39,11 @@ class SearchQController extends GetxController {
 
   void getSuggest(String q) {
     suggests.clear();
-    _searchText = q;
+    searchText = q;
     _searchTimer?.cancel();
 
     try {
-      if (_searchText.length >= 2)
+      if (searchText.length >= 2)
         _searchTimer = Timer(Duration(milliseconds: 500), () async {
           final temp = await ytSearvice.getSuggestion(q);
 
@@ -46,7 +54,16 @@ class SearchQController extends GetxController {
     }
   }
 
+  Future<void> loadPredicts() async {
+    final temp = await database.loadPredicts();
+    predicts.addAll(temp);
+  }
+
   void pushListScreen(String q) {
+    if (!predicts.contains(q)) {
+      predicts.add(q);
+      database.savePredicts(predicts);
+    }
     Get.toNamed(SearchListScreen.routeName, arguments: q);
   }
 }
