@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class LoadingCellWidget extends StatelessWidget {
   const LoadingCellWidget({
@@ -12,7 +13,7 @@ class LoadingCellWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Center(
         child: CupertinoActivityIndicator(
-          radius: 12.0,
+          radius: 18.sp,
         ),
       ),
     );

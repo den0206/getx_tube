@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/screen/search_q/search_q_controller.dart';
 
@@ -68,9 +69,24 @@ class SearchQScreen extends GetView<SearchQController> {
                         keyword = controller.suggests[index];
                       }
 
-                      return ListTile(
-                        title: Text(keyword),
-                        onTap: () => controller.pushListScreen(keyword),
+                      return Slidable(
+                        key: Key(keyword),
+                        actionPane: SlidableDrawerActionPane(),
+                        actionExtentRatio: 0.25,
+                        secondaryActions: [
+                          IconSlideAction(
+                            caption: 'delete',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () {
+                              controller.deletePredicts(keyword);
+                            },
+                          ),
+                        ],
+                        child: ListTile(
+                          title: Text(keyword),
+                          onTap: () => controller.pushListScreen(keyword),
+                        ),
                       );
                     },
                   ),

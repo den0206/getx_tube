@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
+import 'package:getx_tube/src/service/database_service.dart';
+import 'package:getx_tube/src/service/favorite_video_service.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import 'package:getx_tube/src/service/yt_service.dart';
@@ -18,6 +20,7 @@ class SerarchListController extends GetxController {
 
   final ytSearvice = YTService();
   late SearchList currentPage;
+  final favorite = FavoriteVideoService.to.favorite;
 
   var _endResults = false;
   var loading = false;
@@ -69,6 +72,17 @@ class SerarchListController extends GetxController {
   Future<void> pushVideoDetailScreen(Video video) async {
     final videoIncleWatch = await ytSearvice.yt.videos.get(video.id);
 
-    Get.toNamed(VideoDetailScreen.routeName, arguments: videoIncleWatch);
+    if (videoIncleWatch is Video)
+      Get.toNamed(VideoDetailScreen.routeName, arguments: videoIncleWatch);
+  }
+
+  void addFavorite(Video video) {
+    if (!favorite.map((rxvideo) => rxvideo.id).contains(video.id)) {
+      favorite.add(video);
+
+      final temp = favorite.map((rxvideo) => rxvideo.id.toString()).toList();
+
+      SharedPrefService.to.saveArray(key: DatabaseKey.favorits, array: temp);
+    }
   }
 }

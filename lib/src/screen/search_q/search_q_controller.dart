@@ -55,15 +55,21 @@ class SearchQController extends GetxController {
   }
 
   Future<void> loadPredicts() async {
-    final temp = await database.loadPredicts();
+    final temp = await database.loadArray(DatabaseKey.predicts);
     predicts.addAll(temp);
   }
 
   void pushListScreen(String q) {
     if (!predicts.contains(q)) {
       predicts.add(q);
-      database.savePredicts(predicts);
+      database.saveArray(key: DatabaseKey.predicts, array: predicts);
     }
     Get.toNamed(SearchListScreen.routeName, arguments: q);
+  }
+
+  void deletePredicts(String value) async {
+    predicts.remove(value);
+
+    database.saveArray(key: DatabaseKey.predicts, array: predicts);
   }
 }

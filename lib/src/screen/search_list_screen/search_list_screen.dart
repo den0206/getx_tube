@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/screen/search_list_screen/search_list_controller.dart';
 import 'package:getx_tube/src/screen/widget/loading_widget.dart';
@@ -47,58 +48,74 @@ class VideoCell extends GetView<SerarchListController> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: InkWell(
-        onTap: () async {
-          await controller.pushVideoDetailScreen(video);
-        },
-        child: Container(
-          height: 15.h,
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 5.w),
-                  child: Text(
-                    video.title,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
+    return Slidable(
+      key: Key(video.id.toString()),
+      actionPane: SlidableDrawerActionPane(),
+      actionExtentRatio: 0.25,
+      secondaryActions: [
+        IconSlideAction(
+          caption: 'Favorite',
+          color: Colors.green,
+          icon: Icons.favorite,
+          onTap: () {
+            controller.addFavorite(video);
+          },
+        ),
+      ],
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: InkWell(
+          onTap: () async {
+            await controller.pushVideoDetailScreen(video);
+          },
+          child: Container(
+            height: 15.h,
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 5.w),
+                    child: Text(
+                      video.title,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              AspectRatio(
-                aspectRatio: 1.3,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      video.thumbnails.mediumResUrl,
-                      fit: BoxFit.contain,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 1.5.h),
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Chip(
-                          backgroundColor: Colors.indigo[400],
-                          labelStyle:
-                              TextStyle(color: Colors.white, fontSize: 9.sp),
-                          label: Text(video.duration?.toHoursMinutesSeconds() ??
-                              "00:00"),
-                        ),
+                AspectRatio(
+                  aspectRatio: 1.3,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(
+                        video.thumbnails.mediumResUrl,
+                        fit: BoxFit.contain,
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 1.5.h),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Chip(
+                            backgroundColor: Colors.black,
+                            labelStyle:
+                                TextStyle(color: Colors.white, fontSize: 9.sp),
+                            label: Text(
+                                video.duration?.toHoursMinutesSeconds() ??
+                                    "00:00"),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

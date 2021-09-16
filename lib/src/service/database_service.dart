@@ -1,21 +1,28 @@
-import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPrefService extends GetxController {
-  static SharedPrefService get to => Get.find();
+class SharedPrefService {
+  static SharedPrefService to = SharedPrefService();
 
-  void savePredicts(List<String> predicts) async {
+  void saveArray({required String key, required List<String> array}) async {
     SharedPreferences myPrefs = await SharedPreferences.getInstance();
-    if (predicts.length >= 12) {
-      predicts.removeAt(0);
+    if (array.length >= 12) {
+      array.removeAt(0);
     }
-    await myPrefs.setStringList(DatabaseKey.predicts, predicts);
+    if (key == DatabaseKey.predicts) {
+      await myPrefs.setStringList(DatabaseKey.predicts, array);
+    } else if (key == DatabaseKey.favorits) {
+      await myPrefs.setStringList(DatabaseKey.favorits, array);
+    }
   }
 
-  Future<List<String>> loadPredicts() async {
+  Future<List<String>> loadArray(String key) async {
     SharedPreferences myPrefs = await SharedPreferences.getInstance();
-    final temp = myPrefs.getStringList(DatabaseKey.predicts);
+    List<String>? temp;
+    if (key == DatabaseKey.predicts) {
+      temp = myPrefs.getStringList(DatabaseKey.predicts);
+    } else if (key == DatabaseKey.favorits) {
+      temp = myPrefs.getStringList(DatabaseKey.favorits);
+    }
 
     return temp ?? [];
   }
@@ -23,4 +30,5 @@ class SharedPrefService extends GetxController {
 
 class DatabaseKey {
   static String predicts = "predicts";
+  static String favorits = "favorits";
 }
