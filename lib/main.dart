@@ -8,9 +8,11 @@ import 'package:getx_tube/src/screen/search_list_screen/search_list_screen.dart'
 import 'package:getx_tube/src/screen/search_q/search_q_controller.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
 import 'package:getx_tube/src/service/favorite_video_service.dart';
+import 'package:getx_tube/src/service/get_storage.service.dart';
 import 'package:sizer/sizer.dart';
 
 void main() async {
+  await Get.put(GetStorageServide()).initStorage();
   runApp(MyApp());
 }
 

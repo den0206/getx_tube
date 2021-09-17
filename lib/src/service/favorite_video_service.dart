@@ -1,32 +1,25 @@
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:getx_tube/src/service/database_service.dart';
-import 'package:getx_tube/src/service/yt_service.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:getx_tube/src/model/favorite_video.dart';
+import 'package:getx_tube/src/service/get_storage.service.dart';
+import 'package:getx_tube/src/service/shared_Pref_service.dart';
 
 class FavoriteVideoService extends GetxController {
   static FavoriteVideoService get to => Get.find();
-  final List<Video> favorite = [];
-  final ytService = YTService();
+  final List<FavoriteVideo> favorite = [];
+
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
 
-    await loadFavorite();
+    loadFavorite();
   }
 
-  Future<void> loadFavorite() async {
-    final List<String> localFavorite =
-        await SharedPrefService.to.loadArray(DatabaseKey.favorits);
+  void loadFavorite() {
+    final temp = GetStorageServide.to.loadArray(DatabaseKey.favorits);
 
-    if (localFavorite.isNotEmpty) {
-      await Future.forEach(
-        localFavorite,
-        (id) async {
-          final video = await ytService.yt.videos.get(id);
-          favorite.add(video);
-        },
-      );
+    if (temp.isNotEmpty) {
+      favorite.addAll(temp as List<FavoriteVideo>);
     }
   }
 }
