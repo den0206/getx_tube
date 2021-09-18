@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:getx_tube/src/model/favorite_video.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
-import 'package:getx_tube/src/service/favorite_video_service.dart';
+import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
 import 'package:getx_tube/src/service/get_storage.service.dart';
 import 'package:getx_tube/src/service/shared_Pref_service.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -22,7 +22,7 @@ class SerarchListController extends GetxController {
 
   final ytSearvice = YTService();
   late SearchList currentPage;
-  final favorite = FavoriteVideoService.to.favorite;
+  final favorite = FavoriteVideoController.to.favorite;
 
   var _endResults = false;
   var loading = false;
@@ -85,5 +85,9 @@ class SerarchListController extends GetxController {
       favorite.add(fav);
       GetStorageServide.to.setArray(DatabaseKey.favorits, favorite);
     }
+  }
+
+  bool isFavorite(Video video) {
+    return favorite.map((fav) => fav.id).contains(video.id.toString());
   }
 }

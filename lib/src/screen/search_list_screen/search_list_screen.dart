@@ -54,11 +54,11 @@ class VideoCell extends GetView<SerarchListController> {
       actionExtentRatio: 0.25,
       secondaryActions: [
         IconSlideAction(
-          caption: 'Favorite',
+          caption: !controller.isFavorite(video) ? 'Favorite' : "お気に入り済み",
           color: Colors.green,
           icon: Icons.favorite,
           onTap: () {
-            controller.addFavorite(video);
+            if (!controller.isFavorite(video)) controller.addFavorite(video);
           },
         ),
       ],

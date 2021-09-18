@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:getx_tube/src/service/download_manager.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class FavoriteVideo {
@@ -7,6 +9,16 @@ class FavoriteVideo {
   final String title;
   final Duration? duration;
   final String thumbnail;
+
+  final _dl = DownloadManager.to;
+
+  bool get isDownloaded {
+    return _dl.downloads.containsKey(id);
+  }
+
+  File? get dlFile {
+    return isDownloaded ? _dl.downloads[id] : null;
+  }
 
   FavoriteVideo({
     required this.id,
