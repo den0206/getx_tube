@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:getx_tube/src/service/download_manager.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -36,7 +38,8 @@ class YTService {
     return channel;
   }
 
-  Future<void> downloadVideo(String videoId, {RxDouble? progress}) async {
+  Future<void> downloadVideo(String videoId,
+      {RxDouble? progress, bool? cancel}) async {
     final directory = DownloadManager.to.videoDir;
     await directory.create(recursive: true);
 
@@ -57,6 +60,9 @@ class YTService {
         count += data.length.toDouble();
         progress?.value = ((count / len) / 1);
         print(progress);
+        if (cancel != null && cancel) {
+          Get.back();
+        }
         output.add(data);
       }
 

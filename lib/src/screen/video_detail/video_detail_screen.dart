@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_controller.dart';
+import 'package:getx_tube/src/screen/widget/common_yt_player.dart';
 import 'package:getx_tube/src/screen/widget/loading_widget.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:sizer/sizer.dart';
@@ -29,7 +30,10 @@ class VideoDetailScreen extends GetView<VideoDetailController> {
                   SystemChrome.setPreferredOrientations(
                       DeviceOrientation.values);
                 },
-                player: _ytPlayer(),
+                player: commonYTPlayer(
+                  videoTitle: controller.video.title,
+                  ytController: controller.ytController,
+                ),
                 builder: (context, player) {
                   return Column(
                     children: [
@@ -149,54 +153,6 @@ class VideoDetailScreen extends GetView<VideoDetailController> {
         ),
         Text(title),
       ],
-    );
-  }
-
-  YoutubePlayer _ytPlayer() {
-    return YoutubePlayer(
-      controller: controller.ytController,
-      showVideoProgressIndicator: true,
-      progressIndicatorColor: Colors.blueAccent,
-      topActions: <Widget>[
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-            size: 25.0,
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: Text(
-            controller.video.title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18.0,
-            ),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        ),
-        IconButton(
-          icon: const Icon(
-            Icons.settings,
-            color: Colors.white,
-            size: 25.0,
-          ),
-          onPressed: () async {
-            await controller.loadCommens();
-          },
-        ),
-      ],
-      onReady: () {
-        controller.ytController.play();
-      },
-      onEnded: (data) {
-        controller.ytController.pause();
-      },
     );
   }
 }

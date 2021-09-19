@@ -73,17 +73,31 @@ class FavoriteCell extends GetView<FavoriteVideoController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 5.w),
-                      child: Text(
-                        fav.title,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 5.w),
+                          child: Text(
+                            fav.title,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                         ),
-                      ),
+                        if (fav.isDownloaded)
+                          Chip(
+                            label: Text(
+                              "ダウンロード済み",
+                            ),
+                            labelStyle: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 8.sp),
+                          )
+                      ],
                     ),
                   ),
                   AspectRatio(

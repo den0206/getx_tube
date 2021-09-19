@@ -1,8 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
 import 'package:getx_tube/src/service/download_manager.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:get/get.dart';
+
+extension VideoExt on Video {
+  RxBool get isFavorite {
+    return FavoriteVideoController.to.favorite
+        .map((f) => f.id)
+        .contains(id.toString())
+        .obs;
+  }
+}
 
 class FavoriteVideo {
   final String id;

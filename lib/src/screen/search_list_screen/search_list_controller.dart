@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:getx_tube/src/model/favorite_video.dart';
+import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
 import 'package:getx_tube/src/service/get_storage.service.dart';
@@ -79,15 +80,17 @@ class SerarchListController extends GetxController {
   }
 
   void addFavorite(Video video) {
+    if (video.isFavorite.value) {
+      Get.back();
+      MainTabController.to.setIndex(1);
+      return;
+    }
+
     final fav = FavoriteVideo.fromVideo(video);
 
-    if (!favorite.map((ex) => ex.id).contains(fav.id)) {
+    if (!video.isFavorite.value) {
       favorite.add(fav);
       GetStorageServide.to.setArray(DatabaseKey.favorits, favorite);
     }
-  }
-
-  bool isFavorite(Video video) {
-    return favorite.map((fav) => fav.id).contains(video.id.toString());
   }
 }

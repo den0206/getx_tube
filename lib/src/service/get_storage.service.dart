@@ -48,4 +48,12 @@ class GetStorageServide extends GetxService {
       }
     }
   }
+
+  void deleteKey(DatabaseKey key) async {
+    if (box.read(key.keyString) == null) {
+      return;
+    } else {
+      await box.remove(key.keyString);
+    }
+  }
 }

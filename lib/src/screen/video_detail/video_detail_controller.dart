@@ -59,9 +59,6 @@ class VideoDetailController extends GetxController {
       return;
     }
 
-    // loading = true;
-
-    // update();
     try {
       CommentsList? result;
 

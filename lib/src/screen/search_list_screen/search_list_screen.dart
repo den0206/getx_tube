@@ -5,6 +5,7 @@ import 'package:getx_tube/src/screen/search_list_screen/search_list_controller.d
 import 'package:getx_tube/src/screen/widget/loading_widget.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:sizer/sizer.dart';
+import 'package:getx_tube/src/model/favorite_video.dart';
 
 class SearchListScreen extends GetView<SerarchListController> {
   const SearchListScreen({Key? key}) : super(key: key);
@@ -53,13 +54,15 @@ class VideoCell extends GetView<SerarchListController> {
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
       secondaryActions: [
-        IconSlideAction(
-          caption: !controller.isFavorite(video) ? 'Favorite' : "お気に入り済み",
-          color: Colors.green,
-          icon: Icons.favorite,
-          onTap: () {
-            if (!controller.isFavorite(video)) controller.addFavorite(video);
-          },
+        Obx(
+          () => IconSlideAction(
+            caption: !video.isFavorite.value ? 'Favorite' : "お気に入り済み",
+            color: !video.isFavorite.value ? Colors.green : Colors.blue,
+            icon: Icons.favorite,
+            onTap: () {
+              controller.addFavorite(video);
+            },
+          ),
         ),
       ],
       child: Padding(

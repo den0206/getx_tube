@@ -27,8 +27,9 @@ class FavoriteVideoController extends GetxController {
     }
   }
 
-  void pushDetailFav(FavoriteVideo fav) {
-    Get.toNamed(DetailFavoriteScreen.routeName, arguments: fav);
+  void pushDetailFav(FavoriteVideo fav) async {
+    final _ = await Get.toNamed(DetailFavoriteScreen.routeName, arguments: fav);
+    update();
   }
 
   void deleteFav(FavoriteVideo fav) {
@@ -38,6 +39,19 @@ class FavoriteVideoController extends GetxController {
     }
 
     database.setArray(DatabaseKey.favorits, favorite);
+    update();
+  }
+
+  void deleteAllFav() {
+    if (favorite.isEmpty) {
+      return;
+    }
+
+    favorite.forEach((fav) {
+      DownloadManager.to.deleteFile(fav);
+    });
+
+    database.deleteKey(DatabaseKey.favorits);
     update();
   }
 }

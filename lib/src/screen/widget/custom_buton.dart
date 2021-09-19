@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-                color: Colors.black26, offset: Offset(0, 4), blurRadius: 5.0)
+                color: Colors.white12, offset: Offset(0, 4), blurRadius: 5.0)
           ],
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -42,7 +42,7 @@ class CustomButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(80.0),
               ),
             ),
-            minimumSize: MaterialStateProperty.all(Size(40.w, 70)),
+            minimumSize: MaterialStateProperty.all(Size(30.w, 40)),
             backgroundColor: MaterialStateProperty.all(Colors.transparent),
             // elevation: MaterialStateProperty.all(3),
             shadowColor: MaterialStateProperty.all(Colors.transparent),
@@ -50,8 +50,8 @@ class CustomButton extends StatelessWidget {
           onPressed: onPress,
           child: Padding(
             padding: const EdgeInsets.only(
-              top: 10,
-              bottom: 10,
+              top: 5,
+              bottom: 5,
             ),
             child: Text(
               text,
