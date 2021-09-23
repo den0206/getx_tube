@@ -1,11 +1,85 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 
 import 'package:getx_tube/src/model/favorite_video.dart';
 import 'package:getx_tube/src/screen/widget/loading_widget.dart';
-import 'package:video_player/video_player.dart';
-import 'package:get/get.dart';
+
+class PlayingVideoScreen extends StatefulWidget {
+  PlayingVideoScreen({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+  final VideoPlayerController controller;
+
+  @override
+  _PlayingVideoScreenState createState() => _PlayingVideoScreenState();
+}
+
+class _PlayingVideoScreenState extends State<PlayingVideoScreen> {
+  ChewieController? _chewieController;
+
+  late bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _chewieController?.dispose();
+  }
+
+  void _init() async {
+    try {
+      await widget.controller.initialize();
+    } catch (e) {
+      Get.snackbar("Error", "Can't load Video");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+
+    _chewieController = ChewieController(
+      videoPlayerController: widget.controller,
+      aspectRatio: 16 / 9,
+      autoPlay: false,
+      fullScreenByDefault: false,
+      deviceOrientationsAfterFullScreen: [
+        DeviceOrientation.portraitUp,
+      ],
+      deviceOrientationsOnEnterFullScreen: [
+        DeviceOrientation.landscapeLeft,
+      ],
+      placeholder: Container(
+        color: Colors.black87,
+        child: Container(
+          child: Center(
+            child: LoadingCellWidget(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: !_isLoading && _chewieController != null
+          ? Chewie(
+              controller: _chewieController!,
+            )
+          : LoadingCellWidget(),
+    );
+  }
+}
 
 class VideoPlayerScreen extends StatefulWidget {
   VideoPlayerScreen({

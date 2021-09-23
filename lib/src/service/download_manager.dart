@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/model/favorite_video.dart';
@@ -41,6 +42,9 @@ class DownloadManager extends GetxService {
     if (exist) {
       await fav.dlFile!.delete();
     }
+    await CachedNetworkImage.evictFromCache(fav.thumbnail);
     downloads.remove(fav.id);
+
+    print("DELETE FAV");
   }
 }

@@ -7,6 +7,7 @@ import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controll
 import 'package:getx_tube/src/screen/widget/common_yt_player.dart';
 import 'package:getx_tube/src/screen/widget/custom_buton.dart';
 import 'package:getx_tube/src/screen/widget/video_player_screen.dart';
+import 'package:getx_tube/src/service/life_cycle_manager.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailFavoriteScreen extends GetView<DetailFavoriteController> {
@@ -15,41 +16,45 @@ class DetailFavoriteScreen extends GetView<DetailFavoriteController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(
-      child: GetBuilder<DetailFavoriteController>(
-        builder: (_) {
-          if (!controller.fav.isDownloaded) {
-            return YoutubePlayerBuilder(
-              onExitFullScreen: () {
-                SystemChrome.setPreferredOrientations(DeviceOrientation.values);
-              },
-              player: commonYTPlayer(
-                videoTitle: controller.fav.title,
-                ytController: controller.ytController!,
-              ),
-              builder: (context, player) {
-                return Column(
-                  children: [
-                    player,
-                    _DetailFotter(),
-                  ],
-                );
-              },
-            );
-          } else {
-            return Column(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: VideoPlayerScreen(favoriteVideo: controller.fav),
+    return LifecycleWidget(
+      callback: LifecycleCallback(),
+      child: Scaffold(body: SafeArea(
+        child: GetBuilder<DetailFavoriteController>(
+          builder: (_) {
+            if (!controller.fav.isDownloaded) {
+              return YoutubePlayerBuilder(
+                onExitFullScreen: () {
+                  SystemChrome.setPreferredOrientations(
+                      DeviceOrientation.values);
+                },
+                player: commonYTPlayer(
+                  videoTitle: controller.fav.title,
+                  ytController: controller.ytController!,
                 ),
-                _DetailFotter(),
-              ],
-            );
-          }
-        },
-      ),
-    ));
+                builder: (context, player) {
+                  return Column(
+                    children: [
+                      player,
+                      _DetailFotter(),
+                    ],
+                  );
+                },
+              );
+            } else {
+              return Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: VideoPlayerScreen(favoriteVideo: controller.fav),
+                  ),
+                  _DetailFotter(),
+                ],
+              );
+            }
+          },
+        ),
+      )),
+    );
   }
 }
 

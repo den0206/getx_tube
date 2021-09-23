@@ -5,6 +5,7 @@ import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
 import 'package:getx_tube/src/service/get_storage.service.dart';
+import 'package:getx_tube/src/service/playing_service.dart';
 import 'package:getx_tube/src/service/shared_Pref_service.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -75,8 +76,11 @@ class SerarchListController extends GetxController {
   Future<void> pushVideoDetailScreen(Video video) async {
     final videoIncleWatch = await ytSearvice.yt.videos.get(video.id);
 
-    if (videoIncleWatch is Video)
-      Get.toNamed(VideoDetailScreen.routeName, arguments: videoIncleWatch);
+    if (videoIncleWatch is Video) {
+      PlayingService.to.setSorce(videoIncleWatch);
+      Get.back();
+    }
+    // Get.toNamed(VideoDetailScreen.routeName, arguments: videoIncleWatch);
   }
 
   void addFavorite(Video video) {

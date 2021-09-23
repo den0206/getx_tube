@@ -42,7 +42,7 @@ YoutubePlayer commonYTPlayer(
       ),
     ],
     onReady: () {
-      ytController.play();
+      // ytController.play();
     },
     onEnded: (data) {
       ytController.pause();
