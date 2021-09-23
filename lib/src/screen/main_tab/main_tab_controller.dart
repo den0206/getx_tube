@@ -24,6 +24,18 @@ class MainTabController extends GetxController {
     FavoriteVideoScreen(),
   ];
 
+  List<Widget> get menuPages {
+    final map = pages.asMap();
+    final List<_TabNav> res = [];
+
+    map.forEach((key, value) {
+      final tab = _TabNav(key, value);
+      res.add(tab);
+    });
+
+    return res;
+  }
+
   Widget get currentPage {
     return pages[currentIndex];
   }
@@ -31,5 +43,23 @@ class MainTabController extends GetxController {
   void setIndex(int value) {
     currentIndex = value;
     update();
+  }
+}
+
+class _TabNav extends GetView<MainTabController> {
+  final int index;
+  final Widget child;
+
+  _TabNav(this.index, this.child);
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: Get.nestedKey(index),
+      observers: [GetObserver((_) {}, Get.routing)],
+      onGenerateRoute: (settings) {
+        Get.routing.args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => child);
+      },
+    );
   }
 }

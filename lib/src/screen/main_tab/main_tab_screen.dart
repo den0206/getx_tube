@@ -17,7 +17,10 @@ class MainTabScreen extends GetView<MainTabController> {
       init: MainTabController(),
       builder: (_) {
         return Scaffold(
-          body: controller.currentPage,
+          body: IndexedStack(
+            children: controller.menuPages,
+            index: controller.currentIndex,
+          ),
           bottomNavigationBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -58,11 +61,11 @@ class PlayingScreen extends GetView<PlayingService> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: Container(
-                  height: 20.w,
-                  width: 25.w,
+              Container(
+                height: 20.w,
+                width: 25.w,
+                child: AspectRatio(
+                  aspectRatio: 3 / 2,
                   child: _playngScreen(),
                 ),
               ),
@@ -107,7 +110,6 @@ class PlayingScreen extends GetView<PlayingService> {
 
       case CurrentPlayerState.yt:
         return YoutubePlayer(
-          // aspectRatio: 1 / 1,
           controller: controller.ytController!,
         );
       case CurrentPlayerState.video:
@@ -117,3 +119,16 @@ class PlayingScreen extends GetView<PlayingService> {
     }
   }
 }
+
+  //  Expanded(
+  //                 child: Align(
+  //               alignment: Alignment.center,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.symmetric(vertical: 8),
+  //                 child: AspectRatio(
+  //                   aspectRatio: 3 / 2,
+  //                   child: _playngScreen(),
+  //                 ),
+  //               ),
+  //             )),
+

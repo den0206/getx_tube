@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/model/favorite_video.dart';
+import 'package:getx_tube/src/screen/favorite_video/detail/detail_favorite_controller.dart';
 import 'package:getx_tube/src/screen/favorite_video/detail/detail_favorite_screen.dart';
 import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
 import 'package:getx_tube/src/service/download_manager.dart';
@@ -31,6 +32,16 @@ class FavoriteVideoController extends GetxController {
 
   void pushDetailFav(FavoriteVideo fav) async {
     PlayingService.to.setSorce(fav);
+
+    final _ = await Get.to(
+      () => DetailFavoriteScreen(),
+      arguments: fav,
+      binding: DetailFavoriteBinding(),
+      id: MainTabController.to.currentIndex,
+    );
+
+    update();
+
     // final _ = await Get.toNamed(DetailFavoriteScreen.routeName, arguments: fav);
     // update();
   }

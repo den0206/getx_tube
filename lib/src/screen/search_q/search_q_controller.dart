@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
+import 'package:getx_tube/src/screen/search_list_screen/search_list_controller.dart';
 import 'package:getx_tube/src/screen/search_list_screen/search_list_screen.dart';
 import 'package:getx_tube/src/service/shared_Pref_service.dart';
 import 'package:getx_tube/src/service/yt_service.dart';
@@ -65,9 +66,18 @@ class SearchQController extends GetxController {
       predicts.add(q);
       database.saveArray(key: DatabaseKey.predicts, array: predicts);
     }
-    Get.toNamed(
-      SearchListScreen.routeName,
+
+    // Get.toNamed("${SearchQScreen.routeName}${SearchListScreen.routeName}",
+    //     // SearchListScreen.routeName,
+    //     arguments: q,
+    //     id: MainTabController.to.currentIndex,
+    //     preventDuplicates: false);
+
+    Get.to(
+      () => SearchListScreen(),
+      binding: SearchListBinding(),
       arguments: q,
+      id: MainTabController.to.currentIndex,
     );
   }
 

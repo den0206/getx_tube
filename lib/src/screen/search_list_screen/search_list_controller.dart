@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:getx_tube/src/model/favorite_video.dart';
 import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
-import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
 import 'package:getx_tube/src/service/get_storage.service.dart';
 import 'package:getx_tube/src/service/playing_service.dart';
@@ -16,6 +15,10 @@ class SearchListBinding extends Bindings {
   void dependencies() {
     Get.put(SerarchListController());
   }
+}
+
+abstract class routedWidget {
+  static const routeName = '/';
 }
 
 class SerarchListController extends GetxController {

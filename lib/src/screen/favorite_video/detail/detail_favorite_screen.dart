@@ -4,11 +4,13 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/screen/favorite_video/detail/detail_favorite_controller.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
+import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
 import 'package:getx_tube/src/screen/widget/common_yt_player.dart';
 import 'package:getx_tube/src/screen/widget/custom_buton.dart';
 import 'package:getx_tube/src/screen/widget/video_player_screen.dart';
 import 'package:getx_tube/src/service/life_cycle_manager.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:sizer/sizer.dart';
 
 class DetailFavoriteScreen extends GetView<DetailFavoriteController> {
   const DetailFavoriteScreen({Key? key}) : super(key: key);
@@ -44,7 +46,7 @@ class DetailFavoriteScreen extends GetView<DetailFavoriteController> {
               return Column(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
+                    height: 30.h,
                     child: VideoPlayerScreen(favoriteVideo: controller.fav),
                   ),
                   _DetailFotter(),
@@ -76,7 +78,7 @@ class _DetailFotter extends GetView<DetailFavoriteController> {
                 color: Colors.white,
               ),
               onPressed: () {
-                Get.back();
+                Get.back(id: MainTabController.to.currentIndex);
               },
             ),
             Padding(

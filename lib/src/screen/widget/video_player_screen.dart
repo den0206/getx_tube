@@ -19,8 +19,6 @@ class PlayingVideoScreen extends StatefulWidget {
 }
 
 class _PlayingVideoScreenState extends State<PlayingVideoScreen> {
-  ChewieController? _chewieController;
-
   late bool _isLoading = true;
 
   @override
@@ -32,13 +30,13 @@ class _PlayingVideoScreenState extends State<PlayingVideoScreen> {
   @override
   void dispose() {
     super.dispose();
-
-    _chewieController?.dispose();
+    widget.controller.dispose();
   }
 
   void _init() async {
     try {
       await widget.controller.initialize();
+      await widget.controller.play();
     } catch (e) {
       Get.snackbar("Error", "Can't load Video");
     } finally {
@@ -46,37 +44,12 @@ class _PlayingVideoScreenState extends State<PlayingVideoScreen> {
         _isLoading = false;
       });
     }
-
-    _chewieController = ChewieController(
-      videoPlayerController: widget.controller,
-      aspectRatio: 16 / 9,
-      autoPlay: false,
-      fullScreenByDefault: false,
-      deviceOrientationsAfterFullScreen: [
-        DeviceOrientation.portraitUp,
-      ],
-      deviceOrientationsOnEnterFullScreen: [
-        DeviceOrientation.landscapeLeft,
-      ],
-      placeholder: Container(
-        color: Colors.black87,
-        child: Container(
-          child: Center(
-            child: LoadingCellWidget(),
-          ),
-        ),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: !_isLoading && _chewieController != null
-          ? Chewie(
-              controller: _chewieController!,
-            )
-          : LoadingCellWidget(),
+      child: !_isLoading ? VideoPlayer(widget.controller) : LoadingCellWidget(),
     );
   }
 }

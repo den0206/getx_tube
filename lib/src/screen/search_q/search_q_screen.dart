@@ -6,6 +6,8 @@ import 'package:getx_tube/src/screen/search_q/search_q_controller.dart';
 class SearchQScreen extends GetView<SearchQController> {
   const SearchQScreen({Key? key}) : super(key: key);
 
+  static const routeName = '/SearchQ';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

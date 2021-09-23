@@ -46,8 +46,13 @@ class PlayingService extends GetxController {
     } else if (sorce is FavoriteVideo) {
       if (sorce.isDownloaded) {
         ytController = null;
+        if (videoPlayerController != null) {
+          pause();
+          return;
+        }
         videoPlayerController = VideoPlayerController.file(sorce.dlFile!);
       } else {
+        print("call");
         _setYT(sorce.id);
       }
     } else {
@@ -114,6 +119,8 @@ class PlayingService extends GetxController {
   }
 
   void stop() {
+    ytController?.pause();
+    videoPlayerController?.pause();
     videoPlayerController = null;
     ytController = null;
 
