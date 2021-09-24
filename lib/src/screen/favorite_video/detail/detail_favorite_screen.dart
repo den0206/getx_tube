@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/screen/favorite_video/detail/detail_favorite_controller.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
-import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
 import 'package:getx_tube/src/screen/widget/common_yt_player.dart';
 import 'package:getx_tube/src/screen/widget/custom_buton.dart';
 import 'package:getx_tube/src/screen/widget/video_player_screen.dart';
@@ -20,8 +19,10 @@ class DetailFavoriteScreen extends GetView<DetailFavoriteController> {
   Widget build(BuildContext context) {
     return LifecycleWidget(
       callback: LifecycleCallback(),
-      child: Scaffold(body: SafeArea(
+      child: Scaffold(
+          body: SafeArea(
         child: GetBuilder<DetailFavoriteController>(
+          init: DetailFavoriteController(),
           builder: (_) {
             if (!controller.fav.isDownloaded) {
               return YoutubePlayerBuilder(
@@ -78,7 +79,7 @@ class _DetailFotter extends GetView<DetailFavoriteController> {
                 color: Colors.white,
               ),
               onPressed: () {
-                Get.back(id: MainTabController.to.currentIndex);
+                Get.back();
               },
             ),
             Padding(

@@ -4,7 +4,7 @@ import 'package:getx_tube/src/model/favorite_video.dart';
 import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
 import 'package:getx_tube/src/service/get_storage.service.dart';
-import 'package:getx_tube/src/service/playing_service.dart';
+import 'package:getx_tube/src/screen/player/playing_service.dart';
 import 'package:getx_tube/src/service/shared_Pref_service.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -90,6 +90,7 @@ class SerarchListController extends GetxController {
     if (video.isFavorite.value) {
       Get.back();
       MainTabController.to.setIndex(1);
+      FavoriteVideoController.to.update();
       return;
     }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_screen.dart';
 import 'package:getx_tube/src/screen/search_q/search_q_screen.dart';
 
@@ -42,6 +43,9 @@ class MainTabController extends GetxController {
 
   void setIndex(int value) {
     currentIndex = value;
+    if (value == 1) {
+      FavoriteVideoController.to.update();
+    }
     update();
   }
 }

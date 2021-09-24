@@ -67,12 +67,6 @@ class SearchQController extends GetxController {
       database.saveArray(key: DatabaseKey.predicts, array: predicts);
     }
 
-    // Get.toNamed("${SearchQScreen.routeName}${SearchListScreen.routeName}",
-    //     // SearchListScreen.routeName,
-    //     arguments: q,
-    //     id: MainTabController.to.currentIndex,
-    //     preventDuplicates: false);
-
     Get.to(
       () => SearchListScreen(),
       binding: SearchListBinding(),
