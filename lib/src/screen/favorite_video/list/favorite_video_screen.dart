@@ -16,6 +16,18 @@ class FavoriteVideoScreen extends GetView<FavoriteVideoController> {
     return Scaffold(
       appBar: AppBar(
         title: Text('お気に入り'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.delete_outline,
+              color: Colors.red,
+              size: 30,
+            ),
+            onPressed: () {
+              controller.deleteAllFav();
+            },
+          )
+        ],
       ),
       body: GetBuilder<FavoriteVideoController>(
         builder: (_) {

@@ -3,6 +3,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/model/favorite_video.dart';
 import 'package:getx_tube/src/screen/favorite_video/detail/detail_favorite_screen.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
+import 'package:miniplayer/miniplayer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -17,6 +18,8 @@ class PlayingService extends GetxController {
   static PlayingService get to => Get.find();
   YoutubePlayerController? ytController;
   VideoPlayerController? videoPlayerController;
+
+  final MiniplayerController miniplayerController = MiniplayerController();
 
   dynamic source;
 
@@ -42,6 +45,7 @@ class PlayingService extends GetxController {
     super.onClose();
     ytController?.dispose();
     videoPlayerController?.dispose();
+    miniplayerController.dispose();
   }
 
   void setSorce(dynamic sorce) {
@@ -85,7 +89,7 @@ class PlayingService extends GetxController {
           loop: false,
           forceHD: false,
           enableCaption: false,
-          hideControls: true,
+          // hideControls: true,
         ),
       );
     } catch (e) {}

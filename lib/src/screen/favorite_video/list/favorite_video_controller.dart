@@ -50,6 +50,7 @@ class FavoriteVideoController extends GetxController {
     favorite.forEach((fav) {
       DownloadManager.to.deleteFile(fav);
     });
+    favorite.clear();
 
     database.deleteKey(DatabaseKey.favorits);
     update();

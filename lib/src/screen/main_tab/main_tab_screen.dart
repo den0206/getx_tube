@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
-import 'package:getx_tube/src/screen/player/player.dart';
+import 'package:getx_tube/src/screen/player/mini_player.dart';
 
 class MainTabScreen extends GetView<MainTabController> {
   const MainTabScreen({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class MainTabScreen extends GetView<MainTabController> {
           bottomNavigationBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              PlayingScreen(),
+              MiniPlayerArea(),
               BottomNavigationBar(
                 elevation: 0,
                 selectedItemColor: Colors.redAccent,
