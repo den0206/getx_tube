@@ -49,7 +49,7 @@ class MiniPlayerArea extends GetView<PlayingService> {
                       aspectRatio: 3 / 2,
                       child: IgnorePointer(
                         ignoring: isMini,
-                        child: _playngScreen(),
+                        child: _playngScreen(isMini),
                       ),
                     ),
                   ),
@@ -96,7 +96,7 @@ class MiniPlayerArea extends GetView<PlayingService> {
     ];
   }
 
-  Widget _playngScreen() {
+  Widget _playngScreen(bool isMini) {
     switch (controller.currentState) {
       case CurrentPlayerState.none:
         return Container();
@@ -108,6 +108,7 @@ class MiniPlayerArea extends GetView<PlayingService> {
       case CurrentPlayerState.video:
         return PlayingVideoScreen(
           controller: controller.videoPlayerController!,
+          isMini: isMini,
         );
     }
   }

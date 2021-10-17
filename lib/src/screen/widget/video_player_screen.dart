@@ -11,8 +11,11 @@ class PlayingVideoScreen extends StatefulWidget {
   PlayingVideoScreen({
     Key? key,
     required this.controller,
+    required this.isMini,
   }) : super(key: key);
+
   final VideoPlayerController controller;
+  final bool isMini;
 
   @override
   _PlayingVideoScreenState createState() => _PlayingVideoScreenState();
@@ -20,6 +23,8 @@ class PlayingVideoScreen extends StatefulWidget {
 
 class _PlayingVideoScreenState extends State<PlayingVideoScreen> {
   late bool _isLoading = true;
+
+  ChewieController? _chewieController;
 
   @override
   void initState() {
@@ -44,12 +49,45 @@ class _PlayingVideoScreenState extends State<PlayingVideoScreen> {
         _isLoading = false;
       });
     }
+
+    _chewieController = ChewieController(
+      videoPlayerController: widget.controller,
+      aspectRatio: 16 / 9,
+      autoPlay: false,
+      fullScreenByDefault: false,
+      showControlsOnInitialize: false,
+      deviceOrientationsAfterFullScreen: [
+        DeviceOrientation.portraitUp,
+      ],
+      deviceOrientationsOnEnterFullScreen: [
+        DeviceOrientation.landscapeLeft,
+      ],
+      placeholder: Container(
+        color: Colors.black87,
+        child: Container(
+          child: Center(
+            child: LoadingCellWidget(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant PlayingVideoScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: !_isLoading ? VideoPlayer(widget.controller) : LoadingCellWidget(),
+      child: !_isLoading
+          ? widget.isMini
+              ? VideoPlayer(widget.controller)
+              : Chewie(
+                  controller: _chewieController!,
+                )
+          : LoadingCellWidget(),
     );
   }
 }

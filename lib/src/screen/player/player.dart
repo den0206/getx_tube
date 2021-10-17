@@ -83,6 +83,7 @@ class PlayingScreen extends GetView<PlayingService> {
       case CurrentPlayerState.video:
         return PlayingVideoScreen(
           controller: controller.videoPlayerController!,
+          isMini: false,
         );
     }
   }
