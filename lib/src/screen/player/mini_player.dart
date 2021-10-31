@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_tube/src/screen/widget/detect_lifecycle_widgets.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -22,43 +23,64 @@ class MiniPlayerArea extends GetView<PlayingService> {
     return GetBuilder<PlayingService>(
       init: PlayingService(),
       builder: (_) {
-        return Miniplayer(
-          controller: controller.miniplayerController,
-          minHeight: 25.w,
-          maxHeight: maxHeight,
-          builder: (height, percentage) {
-            final bool isMini = (height <= 25.w + 50.0);
+        return DetectLifeCycleWidget(
+          onChangeState: (state) {
+            switch (state) {
+              case AppLifecycleState.inactive:
+                print('非アクティブになったときの処理');
 
-            return Container(
-              decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border(
-                    top: BorderSide(width: 1, color: Colors.white),
-                    bottom: BorderSide(color: Colors.white),
-                  )),
-              child: Flex(
-                direction: isMini ? Axis.horizontal : Axis.vertical,
-                mainAxisAlignment: isMini
-                    ? MainAxisAlignment.spaceAround
-                    : MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(top: isMini ? 0 : 5.h),
-                    constraints: BoxConstraints(maxHeight: height - 10),
-                    child: AspectRatio(
-                      aspectRatio: 3 / 2,
-                      child: IgnorePointer(
-                        ignoring: isMini,
-                        child: _playngScreen(isMini),
+                break;
+              case AppLifecycleState.paused:
+                print('停止されたときの処理');
+                controller.handleOnPause();
+                break;
+              case AppLifecycleState.resumed:
+                print('再開されたときの処理');
+                controller.handleOnResume();
+                break;
+              case AppLifecycleState.detached:
+                print('破棄されたときの処理');
+                break;
+            }
+          },
+          child: Miniplayer(
+            controller: controller.miniplayerController,
+            minHeight: 25.w,
+            maxHeight: maxHeight,
+            builder: (height, percentage) {
+              final bool isMini = (height <= 25.w + 50.0);
+
+              return Container(
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    border: Border(
+                      top: BorderSide(width: 1, color: Colors.white),
+                      bottom: BorderSide(color: Colors.white),
+                    )),
+                child: Flex(
+                  direction: isMini ? Axis.horizontal : Axis.vertical,
+                  mainAxisAlignment: isMini
+                      ? MainAxisAlignment.spaceAround
+                      : MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(top: isMini ? 0 : 5.h),
+                      constraints: BoxConstraints(maxHeight: height - 10),
+                      child: AspectRatio(
+                        aspectRatio: 3 / 2,
+                        child: IgnorePointer(
+                          ignoring: isMini,
+                          child: _playngScreen(isMini),
+                        ),
                       ),
                     ),
-                  ),
-                  if (isMini) ..._miniPlayerButtons,
-                  if (height >= maxHeight - 10) ..._properSpace()
-                ],
-              ),
-            );
-          },
+                    if (isMini) ..._miniPlayerButtons,
+                    if (height >= maxHeight - 10) ..._properSpace()
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
     );

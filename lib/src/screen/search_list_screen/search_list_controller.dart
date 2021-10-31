@@ -3,6 +3,7 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:getx_tube/src/model/favorite_video.dart';
 import 'package:getx_tube/src/screen/main_tab/main_tab_controller.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
+import 'package:getx_tube/src/service/audio_service.dart';
 import 'package:getx_tube/src/service/get_storage.service.dart';
 import 'package:getx_tube/src/screen/player/playing_service.dart';
 import 'package:getx_tube/src/service/shared_Pref_service.dart';
@@ -80,6 +81,7 @@ class SerarchListController extends GetxController {
     final videoIncleWatch = await ytSearvice.yt.videos.get(video.id);
 
     if (videoIncleWatch is Video) {
+      // VideoHandler.to.setYtVideo(video);
       PlayingService.to.setSorce(videoIncleWatch);
       Get.back();
     }

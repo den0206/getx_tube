@@ -27,6 +27,13 @@ class YTService {
     print(streamInfo);
   }
 
+  Future<String> getAudioUrl(VideoId id) async {
+    var manifest = await yt.videos.streamsClient.getManifest(id);
+    return Platform.isIOS
+        ? manifest.muxed.withHighestBitrate().url.toString()
+        : manifest.audioOnly.withHighestBitrate().url.toString();
+  }
+
   Future<CommentsList?> getComments(Video video) async {
     final comment = await yt.videos.commentsClient.getComments(video);
 

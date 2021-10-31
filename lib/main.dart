@@ -11,6 +11,7 @@ import 'package:getx_tube/src/screen/search_q/search_q_controller.dart';
 import 'package:getx_tube/src/screen/search_q/search_q_screen.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
 import 'package:getx_tube/src/screen/favorite_video/list/favorite_video_controller.dart';
+import 'package:getx_tube/src/service/audio_service.dart';
 import 'package:getx_tube/src/service/download_manager.dart';
 import 'package:getx_tube/src/service/get_storage.service.dart';
 import 'package:sizer/sizer.dart';

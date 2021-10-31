@@ -1,8 +1,14 @@
+import 'dart:async';
+
+import 'package:audio_service/audio_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_tube/src/model/favorite_video.dart';
 import 'package:getx_tube/src/screen/favorite_video/detail/detail_favorite_screen.dart';
 import 'package:getx_tube/src/screen/video_detail/video_detail_screen.dart';
+import 'package:getx_tube/src/service/background_service.dart';
+import 'package:getx_tube/src/service/yt_service.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -18,8 +24,10 @@ class PlayingService extends GetxController {
   static PlayingService get to => Get.find();
   YoutubePlayerController? ytController;
   VideoPlayerController? videoPlayerController;
+  late BackGroundPlayerHandlerImpl _backGroundPlayerHandlerImpl;
 
   final MiniplayerController miniplayerController = MiniplayerController();
+  final ytSearvice = YTService();
 
   dynamic source;
 
@@ -35,9 +43,33 @@ class PlayingService extends GetxController {
     }
   }
 
+  bool get isPlaying {
+    switch (currentState) {
+      case CurrentPlayerState.none:
+        return false;
+      case CurrentPlayerState.yt:
+        return ytController!.value.isPlaying;
+      case CurrentPlayerState.video:
+        return videoPlayerController!.value.isPlaying;
+    }
+  }
+
+  Duration get currentPosition {
+    switch (currentState) {
+      case CurrentPlayerState.none:
+        return Duration();
+      case CurrentPlayerState.yt:
+        return ytController!.value.position;
+      case CurrentPlayerState.video:
+        return videoPlayerController!.value.position;
+    }
+  }
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+
+    await startService();
   }
 
   @override
@@ -48,8 +80,35 @@ class PlayingService extends GetxController {
     miniplayerController.dispose();
   }
 
+  Future<void> startService() async {
+    _backGroundPlayerHandlerImpl = await AudioService.init(
+      builder: () => BackGroundPlayerHandlerImpl(),
+      config: AudioServiceConfig(
+        androidNotificationChannelId: 'com.shadow.gettube.channel.audio',
+        androidNotificationChannelName: 'GetTube',
+        androidNotificationOngoing: true,
+        androidNotificationIcon: 'drawable/ic_stat_music_note',
+        androidShowNotificationBadge: true,
+        notificationColor: Colors.grey[900],
+      ),
+    );
+  }
+
+  void handleOnPause() {
+    _backGroundPlayerHandlerImpl.handleOnPause(currentPosition);
+  }
+
+  void handleOnResume() async {
+    final Duration currentDuration =
+        await _backGroundPlayerHandlerImpl.handleOnResume();
+
+    setCurrentPosition(currentDuration);
+  }
+
   void setSorce(dynamic sorce) {
     source = sorce;
+    sourceToMedia();
+
     if (sorce is Video) {
       _setYT(sorce.id.toString());
     } else if (sorce is FavoriteVideo) {
@@ -61,7 +120,6 @@ class PlayingService extends GetxController {
         }
         videoPlayerController = VideoPlayerController.file(sorce.dlFile!);
       } else {
-        print("call");
         _setYT(sorce.id);
       }
     } else {
@@ -93,6 +151,86 @@ class PlayingService extends GetxController {
         ),
       );
     } catch (e) {}
+  }
+
+  Future<void> sourceToMedia() async {
+    if (source is! Video && source is! FavoriteVideo) {
+      print("NOT FIT TYPE");
+      return;
+    }
+
+    MediaItem? mediaItem;
+
+    if (source is Video) {
+      mediaItem = await _configYTMedia(source);
+    }
+
+    if (source is FavoriteVideo) {
+      mediaItem = await _configFavMedia(source);
+    }
+
+    if (mediaItem != null)
+      _backGroundPlayerHandlerImpl.setBackgroundTrack(mediaItem);
+  }
+
+  Future<MediaItem> _configYTMedia(Video video) async {
+    final String thumbString = video.thumbnails.standardResUrl;
+    final artUri = Uri.parse(thumbString);
+    final audioUrl = await ytSearvice.getAudioUrl(video.id);
+
+    final MediaItem mediaItem = MediaItem(
+      id: video.id.toString(),
+      title: video.title,
+      artist: video.author,
+      artUri: artUri,
+      duration: video.duration,
+      extras: {
+        "url": audioUrl,
+        "isFile": false,
+      },
+    );
+
+    return mediaItem;
+  }
+
+  Future<MediaItem> _configFavMedia(FavoriteVideo fav) async {
+    final artUri = Uri.parse(fav.thumbnail);
+
+    dynamic urlSorce;
+    if (fav.isDownloaded) {
+      urlSorce = fav.dlFile!.path;
+    } else {
+      final audioUrl = await ytSearvice.getAudioUrl(VideoId(fav.id));
+      urlSorce = audioUrl;
+    }
+    bool isFile = fav.isDownloaded;
+
+    final mediaItem = MediaItem(
+      id: fav.id.toString(),
+      title: fav.title,
+      artist: fav.title,
+      artUri: artUri,
+      duration: fav.duration,
+      extras: {
+        "url": urlSorce,
+        "isFile": isFile,
+      },
+    );
+
+    return mediaItem;
+  }
+
+  void setCurrentPosition(Duration positon) {
+    switch (currentState) {
+      case CurrentPlayerState.none:
+        return;
+      case CurrentPlayerState.yt:
+        ytController!.seekTo(positon);
+        break;
+      case CurrentPlayerState.video:
+        videoPlayerController!.seekTo(positon);
+        break;
+    }
   }
 
   void play() {
